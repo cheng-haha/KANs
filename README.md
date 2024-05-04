@@ -1,4 +1,4 @@
-# The toy examples of Kan
+# The toy examples of Kan ( Kolmogorov-Arnold Network )
 
 *Support MLP, Kan, and Kan derivatives*
 
