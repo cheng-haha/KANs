@@ -4,7 +4,7 @@
 
 KAN [Kolmogorov-Arnold Networks](https://arxiv.org/abs/2404.19756)
 
-Using the [pykan package](https://github.com/KindXiaoming/pykan) | [Efficient-KAN]([https://github.com/KindXiaoming/pykan](https://github.com/Blealtan/efficient-kan))
+Using the [pykan package](https://github.com/KindXiaoming/pykan) | [Efficient-KAN]((https://github.com/Blealtan/efficient-kan))
 ## Run
 ```
 python examples/mnist.py --model MLP
