@@ -18,3 +18,6 @@ python examples/mnist.py --model MLP
 python examples/mnist.py --model KAN
 python examples/mnist.py --model MNISTFourierKAN
 ```
+## Experiential Settings
+
+* For KAN, a large initial learning rate may be more effective. (You can try `lr = 1e-2`)
