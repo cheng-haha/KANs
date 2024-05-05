@@ -21,3 +21,4 @@ python examples/mnist.py --model MNISTFourierKAN
 ## Experiential Settings
 
 * For KAN, a large initial learning rate may be more effective. (You can try `lr = 1e-2`)
+* In my experiments, KAN does converge faster than MLP.
