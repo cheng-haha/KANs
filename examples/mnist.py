@@ -22,24 +22,24 @@ parser.add_argument('--epoch', type=int, default=10)
 args = parser.parse_args()
 
 # Load MNIST
-transform = transforms.Compose(
+transform   = transforms.Compose(
     [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
 )
-trainset = torchvision.datasets.MNIST(
+trainset    = torchvision.datasets.MNIST(
     root="./data", train=True, download=True, transform=transform
 )
-valset = torchvision.datasets.MNIST(
+valset      = torchvision.datasets.MNIST(
     root="./data", train=False, download=True, transform=transform
 )
 trainloader = DataLoader(trainset, batch_size=256, shuffle=True)
-valloader = DataLoader(valset, batch_size=256, shuffle=False)
+valloader   = DataLoader(valset, batch_size=256, shuffle=False)
 
 
     
 # Define model
-model = getattr(kans,args.model)([28 * 28, 128, 10])
+model   = getattr(kans,args.model)([28 * 28, 128, 10])
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device  = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 # Define optimizer
 if args.model =='MNISTFourierKAN':
@@ -52,13 +52,6 @@ scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.8)
 # Define loss
 criterion = nn.CrossEntropyLoss()
 
-def closure(model,optimizer,data,labels):
-    optimizer.zero_grad()
-    output = model(data)
-    loss = nn.CrossEntropyLoss()(output, labels)
-    loss.backward()
-    return loss
-
 time_list = []
 for epoch in range(args.epoch):
     # Train
@@ -69,19 +62,18 @@ for epoch in range(args.epoch):
             images, labels = images.view(-1, 28 * 28).to(device), labels.to(device)
 
             if args.model == 'MNISTFourierKAN':
-                output  = model(images)
                 def closure():
                     optimizer.zero_grad()
-                    output = model(images)
-                    loss = criterion(output, labels)
+                    output  = model(images)
+                    loss    = criterion(output, labels)
                     loss.backward()
                     return loss
                 optimizer.step(closure)
-                loss    = closure()
+                loss        = closure()
             else:
                 optimizer.zero_grad()
-                output = model(images)
-                loss = criterion(output, labels.to(device))
+                output  = model(images)
+                loss    = criterion(output, labels.to(device))
                 loss.backward()
                 optimizer.step()
 
@@ -91,18 +83,18 @@ for epoch in range(args.epoch):
 
     # Validation
     model.eval()
-    val_loss = 0
-    val_accuracy = 0
+    val_loss        = 0
+    val_accuracy    = 0
     with torch.no_grad():
         for images, labels in valloader:
-            images = images.view(-1, 28 * 28).to(device)
-            output = model(images)
-            val_loss += criterion(output, labels.to(device)).item()
-            val_accuracy += (
+            images          = images.view(-1, 28 * 28).to(device)
+            output          = model(images)
+            val_loss        += criterion(output, labels.to(device)).item()
+            val_accuracy    += (
                 (output.argmax(dim=1) == labels.to(device)).float().mean().item()
             )
-    val_loss /= len(valloader)
-    val_accuracy /= len(valloader)
+    val_loss        /= len(valloader)
+    val_accuracy    /= len(valloader)
 
     # Update learning rate
     scheduler.step()
@@ -113,13 +105,13 @@ for epoch in range(args.epoch):
 
 
 # toy testing
-model = getattr(kans,args.model)([28 * 28, 64, 10])
-test_x = valset[0][0].view(-1, 28 * 28)
-inf_time = []
+model       = getattr(kans,args.model)([28 * 28, 64, 10])
+test_x      = valset[0][0].view(-1, 28 * 28)
+inf_time    = []
 for i in range(500):
-    inf_sta_time =time.time()
+    inf_sta_time    =  time.time()
     res = model(test_x)
-    inf_end_time =time.time()
+    inf_end_time    =   time.time()
     inf_time.append(inf_end_time-inf_sta_time)
 
 def print_model_parm_nums(model):
