@@ -5,9 +5,12 @@
 KAN [Kolmogorov-Arnold Networks](https://arxiv.org/abs/2404.19756)
 
 KANs:
-* [pykan package](https://github.com/KindXiaoming/pykan)
+* [KANs](https://github.com/KindXiaoming/pykan)
 * [Efficient-KAN](https://github.com/Blealtan/efficient-kan)
 * [FourierKAN](https://github.com/GistNoesis/FourierKAN)
+* Two-layer MLP (Toy Version)
+
+
 ## Run
 ```
 python examples/mnist.py --model MLP
