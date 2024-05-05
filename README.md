@@ -2,7 +2,7 @@
 
 *Support MLP, Kan, and Kan derivatives*
 
-KAN [Kolmogorov-Arnold Networks](https://arxiv.org/abs/2404.19756)
+KAN paper: [Kolmogorov-Arnold Networks](https://arxiv.org/abs/2404.19756)
 
 KANs:
 * [KANs](https://github.com/KindXiaoming/pykan)
