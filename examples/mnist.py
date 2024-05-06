@@ -61,12 +61,13 @@ if args.model =='MNISTFourierKAN':
 else:
     optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
 # Define learning rate scheduler
-scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
+scheduler     = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
 
 # Define loss
-criterion = nn.CrossEntropyLoss()
+criterion     = nn.CrossEntropyLoss()
 
-time_list = []
+time_list     = []
+
 for epoch in range(args.epoch):
     # Train
     model.train()
@@ -84,6 +85,7 @@ for epoch in range(args.epoch):
                     return loss
                 optimizer.step(closure)
                 loss        = closure()
+                
             else:
                 optimizer.zero_grad()
                 output  = model(images)
@@ -125,7 +127,7 @@ test_x      = valset[0][0].view(-1, 28 * 28)
 inf_time    = []
 for i in range(500):
     inf_sta_time    =  time.time()
-    res = model(test_x)
+    res             = model(test_x)
     inf_end_time    =   time.time()
     inf_time.append(inf_end_time-inf_sta_time)
 
