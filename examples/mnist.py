@@ -119,10 +119,9 @@ for epoch in range(args.epoch):
         f"Epoch {epoch + 1}, Val Loss: {val_loss}, Val Accuracy: {val_accuracy}, avg time:{np.mean(time_list)} s"
     )
 
-
+# toy testing
 model.to('cpu')
 model.eval()
-# toy testing
 test_x      = valset[0][0].view(-1, 28 * 28)
 inf_time    = []
 for i in range(500):
