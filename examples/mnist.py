@@ -14,12 +14,26 @@ import time
 import numpy as np
 from fvcore.nn import FlopCountAnalysis, parameter_count_table
 import argparse
+import random
 
 parser = argparse.ArgumentParser()
 # 'KAN' or 'MLP'
 parser.add_argument('--model', type=str, default='MLP')
-parser.add_argument('--epoch', type=int, default=10)
+parser.add_argument('--seed', type=int, default=1)
+parser.add_argument('--epoch', type=int, default=30)
+parser.add_argument('--lr', type=float, default=1e-2)
 args = parser.parse_args()
+
+def set_seed(seed):
+    # fix seed
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.backends.cudnn.deterministic = True
+
+set_seed(args.seed)
 
 # Load MNIST
 transform   = transforms.Compose(
@@ -43,11 +57,11 @@ device  = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 # Define optimizer
 if args.model =='MNISTFourierKAN':
-    optimizer = optim.LBFGS(model.parameters(), lr=1e-2)
+    optimizer = optim.LBFGS(model.parameters(), lr=args.lr)
 else:
-    optimizer = optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
+    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
 # Define learning rate scheduler
-scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.8)
+scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
 
 # Define loss
 criterion = nn.CrossEntropyLoss()
@@ -104,8 +118,9 @@ for epoch in range(args.epoch):
     )
 
 
+model.to('cpu')
+model.eval()
 # toy testing
-model       = getattr(kans,args.model)([28 * 28, 64, 10])
 test_x      = valset[0][0].view(-1, 28 * 28)
 inf_time    = []
 for i in range(500):
@@ -118,7 +133,7 @@ def print_model_parm_nums(model):
     total = sum([param.nelement() for param in model.parameters()])
     return (total / 1e6)
 
-print(f'{args.model} | Averaged Inference Time:{np.mean(inf_time)}')
+print(f'{args.model} | Averaged Inference Time:{np.mean(inf_time)*1e3} ms')
 flops = FlopCountAnalysis(model, test_x)
 print(f"{args.model} | MACs: %.4f M " % (flops.total()/ 1e6))
 print(f"{args.model} | Params: %.4f M" % print_model_parm_nums(model))
